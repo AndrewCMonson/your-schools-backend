@@ -8,7 +8,7 @@ import { authMiddleware } from "./utils/auth";
 import { BaseContext } from "@apollo/server";
 import cookieParser from "cookie-parser";
 
-const PORT = process.env.PORT || 443;
+const PORT = process.env.PORT || 3005;
 
 const corsOptions = {
   origin: [`${process.env.CLOUDFRONT_URL}`, "http://localhost:5173"],
