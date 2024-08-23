@@ -7,11 +7,18 @@ import { typeDefs, resolvers } from "./schemas/index";
 import { authMiddleware } from "./utils/auth";
 import { BaseContext } from "@apollo/server";
 import cookieParser from "cookie-parser";
+import { AWSSecretsRetrieval } from "./env.config";
+
+const { CLOUDFRONT_URL } = await AWSSecretsRetrieval();
 
 const PORT = process.env.PORT || 3005;
 
 const corsOptions = {
-  origin: [`${process.env.CLOUDFRONT_URL}`, "http://localhost:5173"],
+  origin: [
+    `${process.env.CLOUDFRONT_URL}`,
+    "http://localhost:5173",
+    `${CLOUDFRONT_URL}`,
+  ],
   credentials: true,
 };
 
