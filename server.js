@@ -11,9 +11,9 @@ const { CLOUDFRONT_URL } = await AWSSecretsRetrieval();
 const PORT = process.env.PORT || 3005;
 const corsOptions = {
     origin: [
-        `https://${process.env.CLOUDFRONT_URL}`,
-        "https://localhost:5173",
-        `https://${CLOUDFRONT_URL}`,
+        `http://${process.env.CLOUDFRONT_URL}`,
+        "http://localhost:5173",
+        `http://${CLOUDFRONT_URL}`,
     ],
     credentials: true,
 };
