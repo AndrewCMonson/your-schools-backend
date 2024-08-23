@@ -13,11 +13,10 @@ module.exports = {
   plugins: ["@typescript-eslint", "prettier"],
   root: true,
   env: {
-    browser: true,
+    node: true,
     es2020: true,
   },
   rules: {
     "prettier/prettier": ["error"],
   },
-  ignorePatterns: ["frontend/dist"],
 };

@@ -1,10 +1,6 @@
-import dotenv from "dotenv";
-import process from "process";
 import connectDB from "./config/db";
 import { UserModel, SchoolModel } from "./models/index";
 import { users, schools } from "./data/index";
-
-dotenv.config();
 
 connectDB();
 

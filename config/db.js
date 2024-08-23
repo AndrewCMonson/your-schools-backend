@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import { AWSSecretsRetrieval } from "../env.config";
 dotenv.config();
-const mongoURI = process.env.MONGO_URI ?? "undefined";
+const { MONGO_URI } = await AWSSecretsRetrieval();
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(mongoURI);
+        const conn = await mongoose.connect(MONGO_URI ?? process.env.MONGO_URI);
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     }
     catch (error) {

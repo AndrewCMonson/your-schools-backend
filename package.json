@@ -12,8 +12,8 @@
 		"render-build": "yarn install && yarn run build",
 		"client": "cd frontend && yarn run start",
 		"dev": "concurrently \"yarn run server:dev\" \"yarn run client\"",
-		"data:import": "tsx backend/seeder.ts",
-		"data:destroy": "tsx backend/seeder.ts -d",
+		"data:import": "tsx seeder.ts",
+		"data:destroy": "tsx seeder.ts -d",
 		"lint": "eslint . --ext js,ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"generate": "graphql-codegen --config codegen.ts",
 		"watch": "graphql-codegen -w"
@@ -23,8 +23,10 @@
 	"license": "ISC",
 	"dependencies": {
 		"@apollo/server": "^4.10.0",
+		"@aws-sdk/client-secrets-manager": "^3.637.0",
 		"@graphql-codegen/typescript-mongodb": "^3.0.0",
 		"apollo-server-express": "^3.13.0",
+		"aws-sdk": "^2.1681.0",
 		"bcrypt": "^5.1.1",
 		"cookie-parser": "^1.4.6",
 		"cors": "^2.8.5",

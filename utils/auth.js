@@ -1,14 +1,15 @@
-import process from "process";
 import jwt from "jsonwebtoken";
 import { UserModel, SessionModel } from "../models/index";
-const secret = process.env.JWT_SECRET;
-const expiration = process.env.JWT_EXPIRATION;
+import { AWSSecretsRetrieval } from "../env.config";
+const { JWT_SECRET: secret, JWT_EXPIRATION: expiration } = await AWSSecretsRetrieval();
 export const signToken = (user) => {
     const data = {
         username: user.username,
         id: user.id,
     };
-    return jwt.sign({ data }, secret, { expiresIn: expiration });
+    return jwt.sign({ data }, secret ?? process.env.JWT_SECRET, {
+        expiresIn: expiration ?? process.env.JWT_EXPIRATION,
+    });
 };
 export const authMiddleware = async ({ req, res, }) => {
     const token = req.cookies.token;
