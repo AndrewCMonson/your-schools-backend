@@ -10,6 +10,7 @@ import { Resolvers } from "../__generatedTypes__/graphql";
 import { getLatLng, getLatLngFromZipcode } from "../services/index";
 import { generate } from "generate-password";
 import Void from "./scalars";
+import { AWSSecretsRetrieval } from "../env.config";
 
 const resolvers: Resolvers = {
   Query: {
@@ -283,9 +284,11 @@ const resolvers: Resolvers = {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 3),
       });
 
+      const { NODE_ENV } = await AWSSecretsRetrieval();
+
       res.cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: NODE_ENV === "production" ? true : false,
         sameSite: "none",
         maxAge: 1000 * 60 * 60 * 3,
       });
