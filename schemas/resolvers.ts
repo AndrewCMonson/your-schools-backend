@@ -284,11 +284,9 @@ const resolvers: Resolvers = {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 3),
       });
 
-      const { NODE_ENV } = await AWSSecretsRetrieval();
-
       res.cookie("token", token, {
         httpOnly: true,
-        secure: NODE_ENV === "production" ? true : false,
+        secure: false,
         sameSite: "none",
         maxAge: 1000 * 60 * 60 * 3,
       });
