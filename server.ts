@@ -50,6 +50,10 @@ const startServer = async () => {
   app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
   });
+
+  app.get("/health", (_, res) => {
+    res.status(200).send("Server is running");
+  });
 };
 
 startServer();
