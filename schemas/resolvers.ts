@@ -10,7 +10,6 @@ import { Resolvers } from "../__generatedTypes__/graphql";
 import { getLatLng, getLatLngFromZipcode } from "../services/index";
 import { generate } from "generate-password";
 import Void from "./scalars";
-import { AWSSecretsRetrieval } from "../env.config";
 
 const resolvers: Resolvers = {
   Query: {
@@ -116,8 +115,8 @@ const resolvers: Resolvers = {
 
       res.cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        secure: true,
+        sameSite: "lax",
         maxAge: 1000 * 60 * 60 * 3,
       });
 
@@ -284,16 +283,13 @@ const resolvers: Resolvers = {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 3),
       });
 
-      const { NODE_ENV } = await AWSSecretsRetrieval();
-
       res.cookie("token", token, {
         httpOnly: true,
-        secure: NODE_ENV === "production" ? true : false,
-        sameSite: "none",
+        secure: true,
+        sameSite: "lax",
         maxAge: 1000 * 60 * 60 * 3,
       });
 
-      // TODO remove token
       return { token, user: loggedInUser };
     },
     addToFavorites: async (_, { schoolId }, { user }) => {
