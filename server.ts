@@ -18,6 +18,10 @@ const corsOptions = {
     `http://${process.env.CLOUDFRONT_URL}`,
     "http://localhost:5173",
     `http://${CLOUDFRONT_URL}`,
+    `https://www.yourschools.co`,
+    `https://yourschools.co`,
+    `http://www.yourschools.co`,
+    `http://yourschools.co`,
   ],
   credentials: true,
 };
