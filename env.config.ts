@@ -16,6 +16,8 @@ interface AWSSecrets {
   MAIL_PASSWORD: string;
   CLOUDFRONT_URL: string;
   NODE_ENV: string;
+  GOOGLE_MAPS_API_KEY: string;
+  GOOGLE_MAPS_ID: string;
 }
 
 export const AWSSecretsRetrieval = async () => {

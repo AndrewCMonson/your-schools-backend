@@ -1,3 +1,5 @@
+import { AWSSecretsRetrieval } from "../env.config";
+
 interface Location {
   lat: number;
   lng: number;
@@ -10,6 +12,8 @@ export interface ZipcodeLocation {
     southwest: Location;
   };
 }
+
+const { GOOGLE_MAPS_API_KEY } = await AWSSecretsRetrieval();
 
 export const getLatLng = async (
   address: string,
@@ -25,7 +29,7 @@ export const getLatLng = async (
   }
 
   const res = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?address=${updatedWholeAddress}&key=${process.env.VITE_GOOGLE_MAPS_API_KEY}`,
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${updatedWholeAddress}&key=${GOOGLE_MAPS_API_KEY}`,
   );
 
   const data = await res.json().then((data) => {
@@ -40,7 +44,7 @@ export const getLatLngFromZipcode = async (
   zipcode: string,
 ): Promise<ZipcodeLocation> => {
   const res = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?address=${zipcode}&key=${process.env.VITE_GOOGLE_MAPS_API_KEY}`,
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${zipcode}&key=${GOOGLE_MAPS_API_KEY}`,
   );
 
   const data = await res.json().then((data) => {
