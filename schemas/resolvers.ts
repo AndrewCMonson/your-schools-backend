@@ -116,6 +116,7 @@ const resolvers: Resolvers = {
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
+        domain: "yourschools.co",
         sameSite: "strict",
         maxAge: 1000 * 60 * 60 * 3,
       });
@@ -286,6 +287,7 @@ const resolvers: Resolvers = {
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
+        domain: "yourschools.co",
         sameSite: "strict",
         maxAge: 1000 * 60 * 60 * 3,
       });
