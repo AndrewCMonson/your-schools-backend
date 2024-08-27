@@ -287,9 +287,7 @@ const resolvers: Resolvers = {
 
       res.cookie("token", token, {
         httpOnly: true,
-        secure: true,
-        domain: "ys-alb-808494479.us-east-1.elb.amazonaws.com",
-        sameSite: "strict",
+        sameSite: "none",
         maxAge: 1000 * 60 * 60 * 3,
       });
 
