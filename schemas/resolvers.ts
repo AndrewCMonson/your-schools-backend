@@ -116,7 +116,6 @@ const resolvers: Resolvers = {
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
-        domain: "yourschools.co",
         sameSite: "strict",
         maxAge: 1000 * 60 * 60 * 3,
       });
@@ -284,10 +283,12 @@ const resolvers: Resolvers = {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 3),
       });
 
+      console.log("token", token);
+
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
-        domain: "yourschools.co",
+        domain: "ys-alb-808494479.us-east-1.elb.amazonaws.com",
         sameSite: "strict",
         maxAge: 1000 * 60 * 60 * 3,
       });

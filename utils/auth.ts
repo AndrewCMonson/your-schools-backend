@@ -40,6 +40,8 @@ export const authMiddleware: ContextFunction<
 }: ExpressContextFunctionArgument): Promise<MyContext> => {
   const token = req.cookies.token;
 
+  console.log("Token", token);
+
   if (!token) {
     return { res, req };
   }
