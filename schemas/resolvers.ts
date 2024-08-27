@@ -283,10 +283,9 @@ const resolvers: Resolvers = {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 3),
       });
 
-      console.log("token", token);
-
       res.cookie("token", token, {
         httpOnly: true,
+        secure: true,
         sameSite: "none",
         maxAge: 1000 * 60 * 60 * 3,
       });
