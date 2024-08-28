@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "server:dev": "tsx --watch server.ts",
+    "server:dev": "tsx server.ts",
     "server:prod": "node ./dist/server.js",
     "build": "tsc",
     "aws:build": "yarn build && node ./dist/server.js",

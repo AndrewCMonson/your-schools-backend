@@ -1,0 +1,12 @@
+type Auth {
+	token: ID!
+	user: User!
+}
+
+type Mutation {
+	login(email: String!, password: String!): Auth!
+	logout: Void
+}
+
+scalar ObjectId
+scalar Void
