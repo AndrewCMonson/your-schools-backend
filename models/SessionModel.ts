@@ -1,4 +1,4 @@
-import { Schema, Types, model, Document } from "mongoose";
+import { Document, model, Schema, Types } from "mongoose";
 
 export interface SessionAttributes extends Document {
   user: Types.ObjectId;

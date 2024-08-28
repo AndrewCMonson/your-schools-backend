@@ -1,13 +1,12 @@
-import express from "express";
-import cors from "cors";
-import connectDB from "./config/db.js";
-import { ApolloServer } from "@apollo/server";
+import { ApolloServer, BaseContext } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
-import { typeDefs, resolvers } from "./schemas/index.js";
-import { authMiddleware } from "./utils/auth.js";
-import { BaseContext } from "@apollo/server";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+import express from "express";
+import connectDB from "./config/db.js";
+import { schema } from "./GraphQL/schema.js";
 import { AWSSecretsRetrieval } from "./services/index.js";
+import { authMiddleware } from "./utils/auth.js";
 
 const { CLOUDFRONT_URL } = await AWSSecretsRetrieval();
 
@@ -29,8 +28,7 @@ const corsOptions = {
 const startServer = async () => {
   const app = express();
   const server = new ApolloServer<BaseContext>({
-    typeDefs,
-    resolvers,
+    schema,
   });
   await server.start();
 

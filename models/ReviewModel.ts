@@ -1,4 +1,4 @@
-import { Schema, model, Document, Types } from "mongoose";
+import { Document, model, Schema, Types } from "mongoose";
 
 export interface ReviewAttributes extends Document {
   school: Types.ObjectId;

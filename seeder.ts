@@ -1,6 +1,6 @@
 import connectDB from "./config/db.js";
-import { UserModel, SchoolModel } from "./models/index.js";
-import { users, schools } from "./data/index.js";
+import { schools, users } from "./data/index.js";
+import { SchoolModel, UserModel } from "./models/index.js";
 
 connectDB();
 

@@ -1,0 +1,32 @@
+type User {
+  id: ID
+  username: String
+  email: String
+  password: String
+  zipcode: String
+  theme: String
+  favorites: [School!]
+  isAdmin: Boolean
+}
+
+type Query {
+  allUsers: [User!]!
+  me: User!
+  getFavorites(username: String): [User]!
+}
+
+type Mutation {
+  addUser(username: String!, email: String!, password: String!): Auth!
+  deleteUser(id: ID!): String
+  updateUserInfo(
+    username: String
+    email: String
+    password: String
+    zipcode: String
+    theme: String
+  ): User!
+  updateUserPassword(password: String!, newPassword: String!): User
+  addToFavorites(schoolId: ID!): User!
+  removeFromFavorites(schoolId: ID!): User!
+  recoverPassword(email: String!): String!
+}
