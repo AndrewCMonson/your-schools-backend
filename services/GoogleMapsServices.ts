@@ -1,4 +1,4 @@
-import { AWSSecretsRetrieval } from "../env.config";
+import { AWSSecretsRetrieval } from "./AWSSecretsRetrieval";
 
 interface Location {
   lat: number;

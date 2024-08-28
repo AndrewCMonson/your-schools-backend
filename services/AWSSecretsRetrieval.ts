@@ -15,7 +15,7 @@ interface AWSSecrets {
   MAIL_USERNAME: string;
   MAIL_PASSWORD: string;
   CLOUDFRONT_URL: string;
-  NODE_ENV: string;
+  ENVIRONMENT: string;
   GOOGLE_MAPS_API_KEY: string;
   GOOGLE_MAPS_ID: string;
 }

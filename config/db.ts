@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { AWSSecretsRetrieval } from "../env.config";
+import { AWSSecretsRetrieval } from "../services";
 dotenv.config();
 
 const { MONGO_URI } = await AWSSecretsRetrieval();

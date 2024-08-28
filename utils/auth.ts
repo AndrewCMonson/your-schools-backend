@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 import { ContextFunction } from "@apollo/server";
 import { ExpressContextFunctionArgument } from "@apollo/server/express4";
-import { UserAttributes, UserModel, SessionModel } from "../models/index";
+import { UserAttributes, UserModel, SessionModel } from "../models";
 import { Response, Request } from "express";
-import { AWSSecretsRetrieval } from "../env.config";
+import { AWSSecretsRetrieval } from "../services";
 
 export interface MyContext {
   user?: UserAttributes | null;

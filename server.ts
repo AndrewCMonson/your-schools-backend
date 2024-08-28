@@ -7,7 +7,7 @@ import { typeDefs, resolvers } from "./schemas/index";
 import { authMiddleware } from "./utils/auth";
 import { BaseContext } from "@apollo/server";
 import cookieParser from "cookie-parser";
-import { AWSSecretsRetrieval } from "./env.config";
+import { AWSSecretsRetrieval } from "./services";
 
 const { CLOUDFRONT_URL } = await AWSSecretsRetrieval();
 
