@@ -1,5 +1,5 @@
-import { schools } from "./schools";
-import { images } from "./images";
-import { users } from "./users";
+import { schools } from "./schools.js";
+import { images } from "./images.js";
+import { users } from "./users.js";
 
 export { schools, images, users };

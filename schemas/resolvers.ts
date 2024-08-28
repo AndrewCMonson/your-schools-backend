@@ -3,13 +3,13 @@ import {
   UserModel,
   SessionModel,
   ReviewModel,
-} from "../models/index";
+} from "../models/index.js";
 import { AuthenticationError } from "apollo-server-express";
-import { signToken, hashPassword, sendRecoveryEmail } from "../utils/index";
-import { Resolvers } from "../__generatedTypes__/graphql";
-import { getLatLng, getLatLngFromZipcode } from "../services/index";
+import { signToken, hashPassword, sendRecoveryEmail } from "../utils/index.js";
+import { Resolvers } from "../__generatedTypes__/graphql.js";
+import { getLatLng, getLatLngFromZipcode } from "../services/index.js";
 import { generate } from "generate-password";
-import Void from "./scalars";
+import Void from "./scalars.js";
 
 const resolvers: Resolvers = {
   Query: {

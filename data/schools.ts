@@ -1,4 +1,4 @@
-import { images } from "./images";
+import { images } from "./images.js";
 
 interface School {
   name: string;

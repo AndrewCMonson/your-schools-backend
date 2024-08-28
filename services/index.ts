@@ -1,2 +1,2 @@
-export * from "./GoogleMapsServices";
-export * from "./AWSSecretsRetrieval";
+export * from "./GoogleMapsServices.js";
+export * from "./AWSSecretsRetrieval.js";

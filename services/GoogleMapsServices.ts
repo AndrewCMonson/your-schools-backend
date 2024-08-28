@@ -1,4 +1,4 @@
-import { AWSSecretsRetrieval } from "./AWSSecretsRetrieval";
+import { AWSSecretsRetrieval } from "./AWSSecretsRetrieval.js";
 
 interface Location {
   lat: number;
