@@ -35,6 +35,12 @@ type Schools {
   locationInfo: LocationInfo
 }
 
+type Image {
+	url: String
+	alt: String
+	owner: ObjectId
+} 
+
 type LatLng {
   lat: Float
   lng: Float

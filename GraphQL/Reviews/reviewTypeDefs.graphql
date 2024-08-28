@@ -1,0 +1,12 @@
+type Review {
+	id: ID
+	rating: Float
+	review: String
+	owner: User
+	schoolId: School
+	createdAt: String
+}
+
+type Mutation {
+	addReview(schoolId: ID!, rating: Float!, review: String!, owner: ID!): Review!
+}
