@@ -3,7 +3,7 @@ import { expressMiddleware } from "@apollo/server/express4";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
-import connectDB from "./config/db.js";
+import { connectDB } from "./config/db.js";
 import { schema } from "./GraphQL/schema.js";
 import { AWSSecretsRetrieval } from "./services/index.js";
 import { authMiddleware } from "./utils/auth.js";

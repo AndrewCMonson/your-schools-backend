@@ -5,7 +5,7 @@ dotenv.config();
 
 const { MONGO_URI } = await AWSSecretsRetrieval();
 
-const connectDB = async (): Promise<void> => {
+export const connectDB = async (): Promise<void> => {
   try {
     const conn = await mongoose.connect(MONGO_URI ?? process.env.MONGO_URI);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
@@ -14,5 +14,3 @@ const connectDB = async (): Promise<void> => {
     process.exit(1);
   }
 };
-
-export default connectDB;
