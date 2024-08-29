@@ -11,7 +11,7 @@ export interface MyContext {
   req: Request;
 }
 
-interface JwtPayload {
+export interface JwtPayload {
   data: {
     username: string;
     id: string;
