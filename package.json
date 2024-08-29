@@ -59,6 +59,8 @@
     "eslint-plugin-prettier": "^5.1.3",
     "generate-password": "^1.7.1",
     "graphql-codegen-typescript-mongodb-template": "^1.0.5",
+    "mockingoose": "^2.16.2",
+    "mongodb-memory-server": "^10.0.0",
     "nodemailer": "^6.9.13",
     "nodemon": "^3.0.2",
     "prettier": "^3.2.5",

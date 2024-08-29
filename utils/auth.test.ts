@@ -1,12 +1,12 @@
 import { ExpressContextFunctionArgument } from "@apollo/server/express4";
 import { Request } from "express";
 import jwt from "jsonwebtoken";
+import { Types } from "mongoose";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { connectDB } from "../config/db.js";
 import { SessionModel, UserModel } from "../models/index.js";
 import { authMiddleware, JwtPayload } from "../utils/auth.js";
 import { signToken } from "./auth.js";
-import { Types } from "mongoose";
 
 let mockUserId: Types.ObjectId;
 
