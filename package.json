@@ -13,7 +13,8 @@
     "data:destroy": "tsx seeder.ts -d",
     "lint": "eslint . --ext js,ts,tsx --report-unused-disable-directives --max-warnings 0",
     "codegen:generate": "graphql-codegen --config codegen.ts",
-    "codegen:watch": "graphql-codegen -w"
+    "codegen:watch": "graphql-codegen -w",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -63,6 +64,7 @@
     "prettier": "^3.2.5",
     "tslib": "^2.6.2",
     "tsx": "^4.17.0",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.3",
+    "vitest": "^2.0.5"
   }
 }
