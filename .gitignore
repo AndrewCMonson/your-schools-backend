@@ -1,7 +1,7 @@
 node_modules
 .env
 *.js
-**/.test.ts
+*.test.ts
 
 __generatedTypes__
 dist
