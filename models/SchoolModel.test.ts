@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { schools } from "../data/index.js";
 import { ReviewModel, SchoolModel } from "./index.js";
 
-describe("School Model", () => {
+describe("School Model CRUD", () => {
   let con: typeof mongoose;
   let db: MongoMemoryServer;
   let schoolId: Types.ObjectId;
@@ -38,6 +38,17 @@ describe("School Model", () => {
     expect(createdSchool).not.toBe(null);
     expect(createdSchool?.name).toBe(schools[0].name);
     expect(createdSchool?.address).toBe(schools[0].address);
+  });
+
+  it("should be able to update a school", async () => {
+    const updatedSchool = await SchoolModel.findByIdAndUpdate(
+      { _id: schoolId },
+      { name: "New Name" },
+      { new: true },
+    );
+
+    expect(updatedSchool).not.toBe(null);
+    expect(updatedSchool?.name).toBe("New Name");
   });
 
   it("should be able to delete a school", async () => {

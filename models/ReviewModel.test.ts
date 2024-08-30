@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { schools, users } from "../data/index.js";
 import { ReviewModel, SchoolModel, UserModel } from "./index.js";
 
-describe("Review Model", () => {
+describe("Review Model CRUD", () => {
   let con: typeof mongoose;
   let db: MongoMemoryServer;
   let schoolId: Types.ObjectId;
@@ -55,6 +55,25 @@ describe("Review Model", () => {
     expect(review?.rating).toBe(5);
     expect(review?.review).toBe("This is a review");
     expect(review?.owner).toBe(review?.owner);
+  });
+
+  it("should be able to update a review", async () => {
+    const review = await ReviewModel.findOne({
+      school: schoolId,
+    });
+
+    if (!review) {
+      throw new Error("Review not found");
+    }
+
+    const updatedReview = await ReviewModel.findByIdAndUpdate(
+      { _id: review.id },
+      { rating: 4 },
+      { new: true },
+    );
+
+    expect(updatedReview).not.toBe(null);
+    expect(updatedReview?.rating).toBe(4);
   });
 
   it("should be able to delete a review", async () => {
