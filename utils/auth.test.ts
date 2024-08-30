@@ -1,17 +1,20 @@
 import { ExpressContextFunctionArgument } from "@apollo/server/express4";
-import { Request } from "express";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { Types } from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import mongoose, { Types } from "mongoose";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { connectDB } from "../config/db.js";
 import { SessionModel, UserModel } from "../models/index.js";
 import { authMiddleware, JwtPayload } from "../utils/auth.js";
 import { signToken } from "./auth.js";
 
+let con: typeof mongoose;
+let db: MongoMemoryServer;
 let mockUserId: Types.ObjectId;
 
 beforeAll(async () => {
-  await connectDB();
+  db = await MongoMemoryServer.create();
+  con = await mongoose.connect(db.getUri(), {});
 
   const mockUser = await UserModel.create({
     username: "testUser",
@@ -20,6 +23,23 @@ beforeAll(async () => {
   });
 
   mockUserId = mockUser.id;
+});
+
+afterAll(async () => {
+  const collections = con.connection.collections;
+
+  for (const key in collections) {
+    const collection = collections[key];
+    await collection.deleteMany({});
+  }
+
+  if (con) {
+    await con.disconnect();
+  }
+
+  if (db) {
+    await db.stop();
+  }
 });
 
 describe("signToken", () => {
