@@ -22,8 +22,6 @@ describe("Session Model CRUD", () => {
     });
 
     userId = user.id;
-
-    console.log("userId", userId);
   });
 
   afterAll(async () => {
@@ -38,10 +36,12 @@ describe("Session Model CRUD", () => {
 
   it("should be able to create a new session", async () => {
     const token = signToken(user);
+    const expiration = new Date();
 
     const session = await SessionModel.create({
       user: userId,
       token,
+      expireAt: expiration,
     });
 
     if (!session) {
@@ -54,8 +54,8 @@ describe("Session Model CRUD", () => {
 
     expect(createdSession).not.toBe(null);
     expect(createdSession?.user._id.toString()).toBe(userId);
-    expect(createdSession?.token).toBe(session.token);
-    expect(createdSession?.expireAt).toStrictEqual(session.expireAt);
+    expect(createdSession?.token).toBe(token);
+    expect(createdSession?.expireAt).toStrictEqual(expiration);
   });
 
   it("should be able to update a session", async () => {
