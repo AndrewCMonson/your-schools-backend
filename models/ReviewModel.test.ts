@@ -2,8 +2,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose, { Types } from "mongoose";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { schools, users } from "../data/index.js";
-import { SchoolModel, UserModel } from "./index.js";
-import { ReviewModel } from "./ReviewModel.js";
+import { ReviewModel, SchoolModel, UserModel } from "./index.js";
 
 describe("Review Model", () => {
   let con: typeof mongoose;
