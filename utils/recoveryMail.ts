@@ -1,5 +1,6 @@
 import { createTransport } from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { AWSSecretsRetrieval } from "../services/AWSSecretsRetrieval.js";
 
 interface MailOptions {
   from: string | undefined;
@@ -16,8 +17,16 @@ export const sendRecoveryEmail: SendRecoveryEmail = async (
   email,
   tempPassword,
 ) => {
+  const {
+    MAIL_USERNAME,
+    MAIL_PASSWORD,
+    OAUTH_CLIENT_ID,
+    OAUTH_CLIENT_SECRET,
+    OAUTH_REFRESH_TOKEN,
+  } = await AWSSecretsRetrieval();
+
   const mailOptions: MailOptions = {
-    from: process.env.EMAIL,
+    from: MAIL_USERNAME,
     to: email,
     subject: "Password Recovery",
     text: `Use this temporary password to login: ${tempPassword}`,
@@ -28,11 +37,11 @@ export const sendRecoveryEmail: SendRecoveryEmail = async (
       service: "gmail",
       auth: {
         type: "OAuth2",
-        user: process.env.MAIL_USERNAME,
-        pass: process.env.MAIL_PASSWORD,
-        clientId: process.env.OAUTH_CLIENTID,
-        clientSecret: process.env.OAUTH_CLIENT_SECRET,
-        refreshToken: process.env.OAUTH_REFRESH_TOKEN,
+        user: MAIL_USERNAME,
+        pass: MAIL_PASSWORD,
+        clientId: OAUTH_CLIENT_ID,
+        clientSecret: OAUTH_CLIENT_SECRET,
+        refreshToken: OAUTH_REFRESH_TOKEN,
       },
     } as SMTPTransport.Options);
 

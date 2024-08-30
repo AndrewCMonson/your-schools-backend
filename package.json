@@ -11,6 +11,7 @@
     "aws:build": "yarn build && node ./dist/server.js",
     "data:import": "tsx seeder.ts",
     "data:destroy": "tsx seeder.ts -d",
+    "get:env": "tsx ./utils/getEnv.js",
     "lint": "eslint . --ext js,ts,tsx --report-unused-disable-directives --max-warnings 0",
     "codegen:generate": "graphql-codegen --config codegen.ts",
     "codegen:watch": "graphql-codegen -w",
@@ -65,7 +66,7 @@
     "prettier": "^3.2.5",
     "tslib": "^2.6.2",
     "tsx": "^4.17.0",
-    "typescript": "^5.4.3",
+    "typescript": "^5.5.4",
     "vitest": "^2.0.5"
   }
 }
