@@ -2,7 +2,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose, { Types } from "mongoose";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { schools } from "../data/index.js";
-import { ReviewModel, SchoolModel } from "./index.js";
+import { SchoolModel } from "./index.js";
 
 describe("School Model CRUD", () => {
   let con: typeof mongoose;
@@ -64,7 +64,7 @@ describe("School Model CRUD", () => {
       _id: school.id,
     });
 
-    const deletedSchool = await ReviewModel.findOne({
+    const deletedSchool = await SchoolModel.findOne({
       _id: school.id,
     });
 
