@@ -35,6 +35,10 @@ export const schoolResolvers: Resolvers = {
     allSchools: async () => {
       const schools = await SchoolModel.find();
 
+      if (!schools) {
+        throw new Error("No schools found");
+      }
+
       return schools;
     },
   },
