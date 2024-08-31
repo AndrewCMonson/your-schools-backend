@@ -1,3 +1,4 @@
+import { BaseContext } from "@apollo/server";
 import { ApolloServer } from "apollo-server-express";
 import { GraphQLFormattedError } from "graphql";
 import { MongoMemoryServer } from "mongodb-memory-server";
@@ -33,7 +34,7 @@ describe("School Resolvers", async () => {
 
     schools = await SchoolModel.create(schoolData);
 
-    testServer = new ApolloServer({
+    testServer = new ApolloServer<BaseContext>({
       schema,
     });
   });
@@ -130,7 +131,28 @@ describe("School Resolvers", async () => {
         expect(response.errors).toBe(undefined);
         expect(response.data?.schools?.schools.length).toBe(0);
       });
+      it("should return an empty array if there are no schools found", async () => {
+        const response = (await testServer.executeOperation({
+          query: `
+            query {
+              schools(zipcode: "29680") {
+                schools {
+                  name
+                  address
+                  city
+                  state
+                  zipcode
+                }
+              }
+            }
+          `,
+        })) as SingleGraphQLResponse<SchoolResponse>;
+
+        expect(response.errors).toBe(undefined);
+        expect(response.data?.schools?.schools.length).toBe(0);
+      });
     });
+
     describe("allSchools", async () => {
       it("should return all schools", async () => {
         const response = (await testServer.executeOperation({
@@ -149,6 +171,35 @@ describe("School Resolvers", async () => {
 
         expect(response.errors).toBe(undefined);
         expect(response.data?.allSchools?.length).toBe(11);
+      });
+    });
+  });
+  describe("Mutations", async () => {
+    describe("addSchool", async () => {
+      it("should create a new school", async () => {
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              addSchool(
+                name: "Test School"
+                address: "123 Test St."
+                city: "Test City"
+                state: "TS"
+                zipcode: "12345"
+              ) {
+                name
+                address
+                city
+                state
+                zipcode
+              }
+            }
+          `,
+          // TODO: Add graphlQL context to login and run this test.
+        })) as SingleGraphQLResponse<SchoolResponse>;
+
+        expect(response.errors).toBe(undefined);
+        expect(response.data?.school?.name).toBe("Test School");
       });
     });
   });
