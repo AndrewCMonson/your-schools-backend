@@ -432,6 +432,24 @@ describe("School Resolvers", async () => {
         expect(response.errors).toBe(undefined);
         expect(response.data?.school?.reviews.length).toBe(1);
       });
+
+      it("should throw an error if no reviews are found", async () => {
+        const response = (await testServer.executeOperation({
+          query: `
+            query {
+              school(id: "${schools[2].id}") {
+                reviews {
+                  rating
+                  review
+                }
+              }
+            }
+          `,
+        })) as SingleGraphQLResponse<SchoolResponse>;
+
+        expect(response.errors).toBe(undefined);
+        expect(response.data?.school?.reviews.length).toBe(0);
+      });
     });
   });
 });
