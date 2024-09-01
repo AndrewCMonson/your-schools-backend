@@ -11,7 +11,7 @@ export interface MyContext {
   req: Request;
 }
 
-export interface JwtPayload {
+export interface CustomPayload {
   data: {
     username: string;
     id: string;
@@ -47,7 +47,7 @@ export const authMiddleware: ContextFunction<
   try {
     const { data } = jwt.verify(token, secret, {
       maxAge: expiration,
-    }) as JwtPayload;
+    }) as CustomPayload;
 
     if (!data) {
       throw new Error("Token not verified");

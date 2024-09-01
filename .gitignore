@@ -1,7 +1,7 @@
 node_modules
 .env
 *.js
+*.pem
 
 __generatedTypes__
 dist
-.pem
