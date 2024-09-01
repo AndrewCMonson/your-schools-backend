@@ -4,3 +4,4 @@ node_modules
 
 __generatedTypes__
 dist
+.pem
