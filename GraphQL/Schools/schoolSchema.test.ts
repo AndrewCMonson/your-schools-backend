@@ -1,7 +1,5 @@
-import { BaseContext } from "@apollo/server";
 import { ApolloServer } from "apollo-server-express";
-import { Request, Response } from "express";
-import { GraphQLFormattedError } from "graphql";
+import { GraphQLResponses, SingleGraphQLResponse } from "../testTypes.js";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -13,6 +11,7 @@ import {
   UserAttributes,
   UserModel,
 } from "../../models/index.js";
+import { MyContext } from "../../utils/auth.js";
 import { schema } from "../schema.js";
 
 describe("School Resolvers", async () => {
@@ -21,33 +20,6 @@ describe("School Resolvers", async () => {
   let schools: SchoolAttributes[];
   let user: UserAttributes;
   let testServer: ApolloServer;
-
-  interface SchoolResponse {
-    school: SchoolAttributes & {
-      latLng: {
-        lat: number;
-        lng: number;
-      };
-    };
-    schools: {
-      schools: SchoolAttributes[];
-    };
-    allSchools: SchoolAttributes[];
-    addSchool: SchoolAttributes;
-    deleteSchool: string;
-  }
-
-  interface SingleGraphQLResponse<SchoolResponse> {
-    kind: string;
-    data: SchoolResponse;
-    errors: readonly GraphQLFormattedError[];
-  }
-
-  interface MyContext extends BaseContext {
-    user: UserAttributes;
-    req: Request;
-    res: Response;
-  }
 
   beforeAll(async () => {
     db = await MongoMemoryServer.create();
@@ -100,7 +72,7 @@ describe("School Resolvers", async () => {
               }
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.errors).toBe(undefined);
         expect(response.data?.school?.name).toBe(schools[0].name);
@@ -118,7 +90,7 @@ describe("School Resolvers", async () => {
               }
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.data).toBe(null);
         expect(response.errors).not.toBe(undefined);
@@ -140,7 +112,7 @@ describe("School Resolvers", async () => {
               }
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.errors).toBe(undefined);
         expect(response.data?.schools?.schools.length).toBe(4);
@@ -160,7 +132,7 @@ describe("School Resolvers", async () => {
               }
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.errors).toBe(undefined);
         expect(response.data?.schools?.schools.length).toBe(0);
@@ -180,7 +152,7 @@ describe("School Resolvers", async () => {
               }
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.errors).toBe(undefined);
         expect(response.data?.schools?.schools.length).toBe(0);
@@ -201,7 +173,7 @@ describe("School Resolvers", async () => {
               }
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.errors).toBe(undefined);
         expect(response.data?.allSchools?.length).toBe(11);
@@ -242,7 +214,7 @@ describe("School Resolvers", async () => {
               }
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.errors).toBe(undefined);
         expect(response.data?.addSchool.name).toBe("Test School");
@@ -280,7 +252,7 @@ describe("School Resolvers", async () => {
               }
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.data).toBe(null);
         expect(response.errors).not.toBe(undefined);
@@ -305,7 +277,7 @@ describe("School Resolvers", async () => {
               }
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.data).toBe(null);
         expect(response.errors).not.toBe(undefined);
@@ -333,7 +305,7 @@ describe("School Resolvers", async () => {
               deleteSchool(id: "${schools[0].id}")
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.errors).toBe(undefined);
         expect(response.data?.deleteSchool).toBe("School deleted successfully");
@@ -359,7 +331,7 @@ describe("School Resolvers", async () => {
               deleteSchool(id: "${schools[0].id}")
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.data.deleteSchool).toBe(null);
         expect(response.errors).not.toBe(undefined);
@@ -372,7 +344,7 @@ describe("School Resolvers", async () => {
               deleteSchool(id: "")
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.data.deleteSchool).toBe(null);
         expect(response.errors).not.toBe(undefined);
@@ -393,7 +365,7 @@ describe("School Resolvers", async () => {
               }
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.errors).toBe(undefined);
         expect(response.data?.school?.latLng).toHaveProperty("lat");
@@ -427,10 +399,10 @@ describe("School Resolvers", async () => {
               }
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.errors).toBe(undefined);
-        expect(response.data?.school?.reviews.length).toBe(1);
+        expect(response.data?.school?.reviews?.length).toBe(1);
       });
 
       it("should throw an error if no reviews are found", async () => {
@@ -445,10 +417,10 @@ describe("School Resolvers", async () => {
               }
             }
           `,
-        })) as SingleGraphQLResponse<SchoolResponse>;
+        })) as SingleGraphQLResponse<GraphQLResponses>;
 
         expect(response.errors).toBe(undefined);
-        expect(response.data?.school?.reviews.length).toBe(0);
+        expect(response.data?.school?.reviews?.length).toBe(0);
       });
     });
   });
