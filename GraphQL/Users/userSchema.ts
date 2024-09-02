@@ -17,7 +17,7 @@ export const userTypeDefs: string = readFileSync(
 export const userResolvers: Resolvers = {
   Query: {
     me: async (_, __, { user }) => {
-      if (!user) throw new AuthenticationError("Not logged in");
+      if (!user) throw new AuthenticationError("You need to be logged in");
 
       return user;
     },
