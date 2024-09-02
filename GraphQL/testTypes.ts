@@ -1,6 +1,6 @@
 import { GraphQLFormattedError } from "graphql";
-export interface SingleGraphQLResponse<T> {
+export interface SingleGraphQLResponse<Response> {
   kind: string;
-  data: T;
+  data: Response;
   errors: readonly GraphQLFormattedError[];
 }
