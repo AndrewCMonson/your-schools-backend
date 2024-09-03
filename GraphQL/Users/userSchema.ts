@@ -171,21 +171,19 @@ export const userResolvers: Resolvers = {
       return updatedUser;
     },
     removeFromFavorites: async (_, { schoolId }, { user }) => {
-      if (user) {
-        const updatedUser = await UserModel.findByIdAndUpdate(
-          { _id: user.id },
-          { $pull: { favoriteIds: schoolId } },
-          { new: true },
-        );
+      if (!user) throw new AuthenticationError("You need to be logged in");
 
-        if (!updatedUser) {
-          throw new AuthenticationError("Couldn't find user with this id");
-        }
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        { _id: user.id },
+        { $pull: { favoriteIds: schoolId } },
+        { new: true },
+      );
 
-        return updatedUser.id;
+      if (!updatedUser) {
+        throw new AuthenticationError("Couldn't find user with this id");
       }
 
-      throw new AuthenticationError("You need to be logged in!");
+      return updatedUser;
     },
     recoverPassword: async (_, { email }) => {
       if (!email) throw new Error("Please provide an email");

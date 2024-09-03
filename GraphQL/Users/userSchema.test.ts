@@ -5,7 +5,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { schema } from "../../GraphQL/schema.js";
 import { Mutation, Query } from "../../__generatedTypes__/graphql.js";
 import { users } from "../../data/index.js";
-import { UserAttributes, UserModel } from "../../models/index.js";
+import { SchoolModel, UserAttributes, UserModel } from "../../models/index.js";
 import { MyContext } from "../../utils/auth.js";
 import { SingleGraphQLResponse } from "../testTypes.js";
 
@@ -343,6 +343,10 @@ describe("User Resolvers", () => {
           `,
         })) as SingleGraphQLResponse<Mutation>;
 
+        const updatedUser = await UserModel.findById(user.id);
+
+        user = updatedUser as UserAttributes;
+
         expect(response.data?.updateUserInfo).toEqual({
           username: "newUsername",
           email: "newEmail@email.com",
@@ -384,6 +388,258 @@ describe("User Resolvers", () => {
         expect(response.errors?.[0].message).toBe(
           "Couldn't find user with this id",
         );
+      });
+    });
+    describe("updateUserPassword", () => {
+      it("should throw an error if the user is not logged in", async () => {
+        const testServer = new ApolloServer<MyContext>({
+          schema,
+          context: ({ req, res }) => {
+            return {
+              req,
+              res,
+            };
+          },
+        });
+
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              updateUserPassword(password: "password", newPassword: "newPassword") {
+                username
+                email
+              }
+            }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.updateUserPassword).toBe(null);
+        expect(response.errors?.[0].message).toBe("You need to be logged in");
+      });
+      it("should throw an error if user doesn't provide a password or new password", async () => {
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              updateUserPassword(password: "", newPassword: "") {
+                username
+                email
+              }
+            }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.updateUserPassword).toBe(null);
+        expect(response.errors?.[0].message).toBe(
+          "You need to provide a password and a new password",
+        );
+      });
+      it("should throw an error if the new password is the same as the old password", async () => {
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              updateUserPassword(password: "password", newPassword: "password") {
+                username
+                email
+              }
+            }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.updateUserPassword).toBe(null);
+        expect(response.errors?.[0].message).toBe(
+          "New password cannot be the same",
+        );
+      });
+      it("should throw an error if the old password is incorrect", async () => {
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              updateUserPassword(password: "wrongPassword", newPassword: "newPassword") {
+                username
+                email
+              }
+            }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.updateUserPassword).toBe(null);
+        expect(response.errors?.[0].message).toBe("Incorrect password");
+      });
+      it("should throw an error if the user doesn't exist", async () => {
+        const fakeUser = {
+          id: "507f1f77bcf86cd799439011",
+        };
+
+        const testServer = new ApolloServer<MyContext>({
+          schema,
+          context: ({ req, res }) => {
+            return {
+              user: fakeUser,
+              req,
+              res,
+            };
+          },
+        });
+
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              updateUserPassword(password: "password", newPassword: "newPassword") {
+                username
+                email
+              }
+            }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.updateUserPassword).toBe(null);
+        expect(response.errors?.[0].message).toBe(
+          "Couldn't find user with this id",
+        );
+      });
+      it("should update the user's password if all conditions are met", async () => {
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              updateUserPassword(password: "password", newPassword: "newPassword") {
+                username
+                email
+              }
+            }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.updateUserPassword).toEqual({
+          username: user?.username,
+          email: user?.email,
+        });
+        expect(response.errors).toBeUndefined();
+      });
+    });
+    describe("addToFavorites", () => {
+      it("should throw an error if the user is not logged in", async () => {
+        const testServer = new ApolloServer<MyContext>({
+          schema,
+          context: ({ req, res }) => {
+            return {
+              req,
+              res,
+            };
+          },
+        });
+
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              addToFavorites(schoolId: "507f1f77bcf86cd799439011"){
+                id
+                username
+                favorites {
+                  id
+                  name
+                  }
+                }     
+              }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.addToFavorites).toBe(undefined);
+        expect(response.errors?.[0].message).toBe("You need to be logged in");
+      });
+      it("should add a school to the user's favorites", async () => {
+        const testSchool = await SchoolModel.create({
+          name: "Test School",
+          city: "Test City",
+          state: "TS",
+          zip: "12345",
+          description: "Test Description",
+          students: 1000,
+          teachers: 100,
+          rating: 4,
+        });
+
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              addToFavorites(schoolId: "${testSchool.id}"){
+                id
+                username
+                favorites {
+                  id
+                  name
+                  }
+                }
+              }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.addToFavorites).toEqual({
+          id: user.id,
+          username: user?.username,
+          favorites: [
+            {
+              id: testSchool.id,
+              name: testSchool.name,
+            },
+          ],
+        });
+        expect(response.errors).toBeUndefined();
+      });
+    });
+    describe("removeFromFavorites", () => {
+      it("should throw an error if the user is not logged in", async () => {
+        const testServer = new ApolloServer<MyContext>({
+          schema,
+          context: ({ req, res }) => {
+            return {
+              req,
+              res,
+            };
+          },
+        });
+
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              removeFromFavorites(schoolId: "507f1f77bcf86cd799439011"){
+                id
+                username
+                favorites {
+                  id
+                  name
+                  }
+                }     
+              }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.removeFromFavorites).toBe(undefined);
+        expect(response.errors?.[0].message).toBe("You need to be logged in");
+      });
+      it("should remove a school from the user's favorites", async () => {
+        const schools = await SchoolModel.find();
+        const school = schools[0];
+
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              removeFromFavorites(schoolId: "${school.id}"){
+                id
+                username
+                favorites {
+                  id
+                  name
+                  }
+                }
+              }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.removeFromFavorites).toEqual({
+          id: user.id,
+          username: user?.username,
+          favorites: [],
+        });
       });
     });
   });
