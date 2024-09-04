@@ -1,17 +1,9 @@
+import { describe, expect, it } from "vitest";
 import { sendRecoveryEmail } from "./recoveryMail.js";
-import { describe, it, afterAll, expect, vi } from "vitest";
 
 describe("sendRecoveryEmail", () => {
-  const consoleMock = vi
-    .spyOn(console, "log")
-    .mockImplementation(() => undefined);
-
-  afterAll(() => {
-    consoleMock.mockReset();
-  });
-
   it("should send a recovery email", async () => {
-    const email = "andrewmonson908@gmail.com";
+    const email = "test@test.com";
     const tempPassword = "this is a test reset";
     const recoveryEmailInfo = await sendRecoveryEmail(email, tempPassword);
 
@@ -19,6 +11,16 @@ describe("sendRecoveryEmail", () => {
     expect(recoveryEmailInfo.message).toBe(
       "Email sent with temporary password",
     );
-    expect(consoleMock).toBeCalledTimes(1);
+  });
+
+  it("should fail to send a recovery email if the correct parameters are not provided", async () => {
+    const email = "";
+    const tempPassword = "";
+    const recoveryEmailInfo = await sendRecoveryEmail(email, tempPassword);
+
+    expect(recoveryEmailInfo.success).toBe(false);
+    expect(recoveryEmailInfo.message).toBe(
+      "Email or temporary password not provided",
+    );
   });
 });

@@ -16,14 +16,17 @@ interface EmailSendResponse {
   info?: SMTPTransport.SentMessageInfo;
 }
 
-interface SendRecoveryEmail {
-  (email: string, tempPassword: string): Promise<EmailSendResponse>;
-}
+export const sendRecoveryEmail = async (
+  email: string,
+  tempPassword: string,
+): Promise<EmailSendResponse> => {
+  if (!email || !tempPassword) {
+    return {
+      success: false,
+      message: "Email or temporary password not provided",
+    };
+  }
 
-export const sendRecoveryEmail: SendRecoveryEmail = async (
-  email,
-  tempPassword,
-) => {
   const {
     MAIL_USERNAME,
     MAIL_PASSWORD,
@@ -53,8 +56,6 @@ export const sendRecoveryEmail: SendRecoveryEmail = async (
     } as SMTPTransport.Options);
 
     const info = await transporter.sendMail(mailOptions);
-
-    console.log("Message sent: %s", info.messageId);
 
     return {
       success: true,
