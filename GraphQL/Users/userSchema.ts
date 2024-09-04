@@ -173,6 +173,12 @@ export const userResolvers: Resolvers = {
     removeFromFavorites: async (_, { schoolId }, { user }) => {
       if (!user) throw new AuthenticationError("You need to be logged in");
 
+      if (!schoolId) throw new Error("Please provide a school ID");
+
+      const school = await SchoolModel.findById(schoolId);
+
+      if (!school) throw new Error("No school found with this id");
+
       const updatedUser = await UserModel.findByIdAndUpdate(
         { _id: user.id },
         { $pull: { favoriteIds: schoolId } },
@@ -205,7 +211,11 @@ export const userResolvers: Resolvers = {
         { new: true },
       );
 
-      await sendRecoveryEmail(email, tempPassword);
+      const sentEmail = await sendRecoveryEmail(email, tempPassword);
+
+      if (!sentEmail.success) {
+        throw new Error(sentEmail.error?.message);
+      }
 
       return "Email sent with temporary password";
     },

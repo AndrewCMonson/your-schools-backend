@@ -9,8 +9,15 @@ interface MailOptions {
   text: string;
 }
 
+interface EmailSendResponse {
+  success: boolean;
+  message?: string;
+  error?: Error;
+  info?: SMTPTransport.SentMessageInfo;
+}
+
 interface SendRecoveryEmail {
-  (email: string, tempPassword: string): Promise<void>;
+  (email: string, tempPassword: string): Promise<EmailSendResponse>;
 }
 
 export const sendRecoveryEmail: SendRecoveryEmail = async (
@@ -48,7 +55,18 @@ export const sendRecoveryEmail: SendRecoveryEmail = async (
     const info = await transporter.sendMail(mailOptions);
 
     console.log("Message sent: %s", info.messageId);
+
+    return {
+      success: true,
+      message: "Email sent with temporary password",
+      info,
+    };
   } catch (error) {
-    console.error("Error creating transporter", error);
+    console.error("Error sending recovery email", error);
+    return {
+      success: false,
+      message: "Error sending email",
+      error,
+    };
   }
 };

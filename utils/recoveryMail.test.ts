@@ -13,7 +13,12 @@ describe("sendRecoveryEmail", () => {
   it("should send a recovery email", async () => {
     const email = "andrewmonson908@gmail.com";
     const tempPassword = "this is a test reset";
-    await sendRecoveryEmail(email, tempPassword);
+    const recoveryEmailInfo = await sendRecoveryEmail(email, tempPassword);
+
+    expect(recoveryEmailInfo.success).toBe(true);
+    expect(recoveryEmailInfo.message).toBe(
+      "Email sent with temporary password",
+    );
     expect(consoleMock).toBeCalledTimes(1);
   });
 });

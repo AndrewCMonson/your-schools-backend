@@ -641,6 +641,148 @@ describe("User Resolvers", () => {
           favorites: [],
         });
       });
+      it("should throw an error if the school doesn't exist", async () => {
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              removeFromFavorites(schoolId: "507f1f77bcf86cd799439011"){
+                id
+                username
+                favorites {
+                  id
+                  name
+                  }
+                }     
+              }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.removeFromFavorites).toBe(undefined);
+        expect(response.errors?.[0].message).toBe(
+          "No school found with this id",
+        );
+      });
+      it("should throw an error if no school id is provided", async () => {
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              removeFromFavorites(schoolId: ""){
+                id
+                username
+                favorites {
+                  id
+                  name
+                  }
+                }     
+              }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.removeFromFavorites).toBe(undefined);
+        expect(response.errors?.[0].message).toBe("Please provide a school ID");
+      });
+      it("should throw an error if the user doesn't exist", async () => {
+        const fakeUser = {
+          id: "507f1f77bcf86cd799439011",
+        };
+
+        const schools = await SchoolModel.find();
+        const school = schools[0];
+
+        const testServer = new ApolloServer<MyContext>({
+          schema,
+          context: ({ req, res }) => {
+            return {
+              user: fakeUser,
+              req,
+              res,
+            };
+          },
+        });
+
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              removeFromFavorites(schoolId: "${school.id}"){
+                id
+                username
+                favorites {
+                  id
+                  name
+                  }
+                }     
+              }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.removeFromFavorites).toBe(undefined);
+        expect(response.errors?.[0].message).toBe(
+          "Couldn't find user with this id",
+        );
+      });
+    });
+    describe("recoverPassword", () => {
+      it("should throw an error if no email is provided", async () => {
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              recoverPassword(email: "")
+            }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.recoverPassword).toBe(undefined);
+        expect(response.errors?.[0].message).toBe("Please provide an email");
+      });
+      it("should throw an error if no user is found with the provided email", async () => {
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              recoverPassword(email: "noemail@email.com")
+            }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.recoverPassword).toBe(undefined);
+        expect(response.errors?.[0].message).toBe(
+          "No user found with this email",
+        );
+      });
+      it("should create a temporary password, hash it, and update the user's password", async () => {
+        const newUser = await UserModel.create({
+          username: "newestUser",
+          email: "newnewnew@email.com",
+          password: "password",
+        });
+
+        const testServer = new ApolloServer<MyContext>({
+          schema,
+          context: ({ req, res }) => {
+            return {
+              user: newUser,
+              req,
+              res,
+            };
+          },
+        });
+
+        const response = (await testServer.executeOperation({
+          query: `
+            mutation {
+              recoverPassword(email: "${newUser.email}")
+            }
+          `,
+        })) as SingleGraphQLResponse<Mutation>;
+
+        expect(response.data?.recoverPassword).toBe(
+          "Email sent with temporary password",
+        );
+        expect(response.errors).toBeUndefined();
+
+        const updatedUser = await UserModel.findById(newUser.id);
+
+        expect(updatedUser?.password).not.toBe(newUser.password);
+      });
     });
   });
 });
