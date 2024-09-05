@@ -5,7 +5,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose, { Types } from "mongoose";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { SessionModel, UserModel } from "../models/index.js";
-import { authMiddleware, JwtPayload } from "../utils/auth.js";
+import { authMiddleware, CustomPayload } from "../utils/auth.js";
 import { signToken } from "./auth.js";
 
 let con: typeof mongoose;
@@ -54,7 +54,7 @@ describe("signToken", () => {
 
     const { data } = jwt.verify(token, secret, {
       maxAge: expiration,
-    }) as JwtPayload;
+    }) as CustomPayload;
 
     expect(typeof token).toBe("string");
     expect(data).toBeTruthy();
@@ -143,7 +143,7 @@ describe("authMiddleware", async () => {
         res,
       } as unknown as ExpressContextFunctionArgument);
     } catch (error) {
-      expect(error.message).toBe("User Not Authorized");
+      expect(error.message).toBe("User not authorized");
     }
   });
 
@@ -206,7 +206,7 @@ describe("authMiddleware", async () => {
         res,
       } as unknown as ExpressContextFunctionArgument);
     } catch (error) {
-      expect(error.message).toBe("User Not Authorized");
+      expect(error.message).toBe("User not authorized");
     }
   });
 });

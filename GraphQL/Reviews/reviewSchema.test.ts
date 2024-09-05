@@ -150,7 +150,6 @@ describe("Review Resolvers", () => {
     });
     it("should update the school's rating after a review is added", async () => {
       const schoolId = schools[0].id;
-      console.log(schools[0].rating);
       const review = "This is a test review";
       const user = await UserModel.create({
         username: "test2",

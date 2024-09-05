@@ -368,8 +368,6 @@ describe("School Resolvers", async () => {
           `,
         })) as SingleGraphQLResponse<Query>;
 
-        console.log(response.data);
-
         expect(response.errors).toBe(undefined);
         expect(response.data?.school?.latLng).toHaveProperty("lat");
         expect(response.data?.school?.latLng).toHaveProperty("lng");
